@@ -1,14 +1,26 @@
-import React, {useContext, useState, useEffect} from 'react'
-
+import React, {useContext, useState} from 'react'
+import DatePicker from 'react-datepicker'
 import {TransactionsContext} from '../../providers/transactions/transactions.provider';  
 
-export default function EditModal({showEdit , toggleEditModal, transaction}) {
-    const {transactions, editTransaction} = useContext(TransactionsContext);
-    
+export default function EditModal({ toggleEditModal, transaction}) {
+    const {editTransaction} = useContext(TransactionsContext);
     const [transactionDetails, setTransactionDetails] = useState({
         ...transaction
     });
 
+
+    const [date, setDate] = useState(new Date(transactionDetails.valueDate));
+
+    function handleDateChange(date){
+        const dateString= `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+        setTransactionDetails({
+            ...transactionDetails,
+            valueDate: dateString
+        })
+        setDate(date)
+    }
+    
+   
     function handleTextChange(event){
         const {value} = event.target;
         setTransactionDetails({
@@ -17,7 +29,8 @@ export default function EditModal({showEdit , toggleEditModal, transaction}) {
         })
         console.log(transactionDetails)
     }
-    if (!showEdit) return;
+
+
 
   return (
     <div className='fixed z-10 inset-0  bg-slate-900 opacity-90 pt-10 ' role="dialog" aria-modal="true">
@@ -29,14 +42,18 @@ export default function EditModal({showEdit , toggleEditModal, transaction}) {
                 <form>
                     <label className='block'>
                         <span className='block font-bold text-sm'>Value date</span>
-                        <input type="text"
-                        datepicker
-                        datepicker-autohide
-                        name="valueDate"
-                         className='border-2 border-black' 
-                         placeholder="value date"
-                         value={transactionDetails.valueDate}
-                          onChange={handleTextChange}/>
+                    <DatePicker
+                    shouldCloseOnSelect={true}
+                    name='date'
+                    className='border-2 border-black'
+                    dateFormat="yyyy-MM-dd"
+                    placeholderText='select date'
+                    selected={date}
+                    onChange={(date)=> {
+                    // setDate(date);
+                    handleDateChange(date)
+                    }}
+                    />
                     </label>
 
                     <label className='block'>
@@ -48,8 +65,8 @@ export default function EditModal({showEdit , toggleEditModal, transaction}) {
                           className='border-2 border-black'>
                             <option value="">select</option>
                             <option value="Money Transfer">Money Transfer</option>
-                            <option value="loan">Loan</option>
-                            <option value="repayment">Repayment</option>
+                            <option value="Collection">Collection</option>
+                            <option value="Airtime">Airtime</option>
                         </select>
                     
                     </label>

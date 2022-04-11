@@ -14,6 +14,7 @@ export const editTransactionValues = (allTransactions, transactionToEditId, upda
     if(!currentTransaction) return;
     console.log('editing: '+ transactionToEditId)
     allTransactions[transactionToEditId] = updatedTransaction;
+    console.log(allTransactions)
     return {
         ...allTransactions
     }

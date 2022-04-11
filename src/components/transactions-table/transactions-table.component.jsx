@@ -10,7 +10,7 @@ export default function TransactionsTable({toggleEditModal, toggleDeleteModal}) 
     const [startDate, setStartDate] = useState(null)
     const [endDate, setEndDate] = useState(null)
 
-    const {transactions, removeTransaction, toggleAmount} = useContext(TransactionsContext);
+    const {transactions, toggleAmount} = useContext(TransactionsContext);
   return (
     <div>
         <div>
@@ -86,7 +86,7 @@ export default function TransactionsTable({toggleEditModal, toggleDeleteModal}) 
                             {
                                 transaction.showAmount
                                 ?<div className='flex'> {transaction.amount} UGX<FiEye onClick={() =>toggleAmount(transaction.transactionId)} /></div>
-                                :<div className='flex'>*****<FiEyeOff onClick={() =>toggleAmount(transaction.transactionId)} /></div>
+                                :<div className='flex'>* * * * *<FiEyeOff onClick={() =>toggleAmount(transaction.transactionId)} /></div>
                                  
                             }
                             

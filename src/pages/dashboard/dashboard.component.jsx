@@ -1,51 +1,19 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
+import {TransactionsContext} from '../../providers/transactions/transactions.provider';  
 import {ImCross} from 'react-icons/im'
 
 import DeleteModal from '../../components/delete-modal/delete-modal.component';
-
 import EditModal from '../../components/edit-modal/edit-modal.component';
 import TransactionsTable from '../../components/transactions-table/transactions-table.component'
 
 export default function Dashboard() {
-
-    const INITIAL_DATA = {
-        "1480636587": {
-            valueDate:"2022-01-13", 
-            transactionId:"1480636587",
-            movementType:"Money Transfer", 
-            amount:1400,
-            status: "Active", 
-            showAmount: false},
-           "28032199311": {
-                valueDate:"2022-03-23", 
-                transactionId:"28032199311",
-                movementType:"Money Transfer", 
-                amount:2200,
-                status: "Error", 
-                showAmount: false}
-        }
-
-    const [transactions, setTransactions] = useState(INITIAL_DATA);
-    const [showEdit, setShowEdit] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [currentTransaction, setcurrentTransaction] = useState();
-
-    const toggleEditModal = (transactionId) =>{
-        setcurrentTransaction(transactions[transactionId])
-        setShowEdit(!showEdit)
-    } 
-
-    const toggleDeleteModal = (transactionId) =>{
-        setcurrentTransaction(transactions[transactionId])
-        setShowDeleteModal(!showDeleteModal)
-    } 
-
-
+    const [searchText, setSearchText] = useState("");
+    const {toggleDeleteModal, toggleEditModal, showEditModal, showDeleteModal, currentTransaction} = useContext(TransactionsContext);
 
   return (
     <div>
         {
-            showEdit && <EditModal showEdit={showEdit} 
+            showEditModal && <EditModal
             toggleEditModal={toggleEditModal}
             transaction={currentTransaction}/>
         }
@@ -58,21 +26,23 @@ export default function Dashboard() {
         }
         
         <div className='w-full bg-slate-100 h-20'>
-            <form className='py-5 flex'>
-                <label className='text-lg font-bold block relative'>
+            <form className='p-5 flex flex-row'>
+                <label className='text-lg font-bold block relative mx-2'>
                     <span>Transaction</span>
                 </label>
-                
-                    
-                    <input type="text" placeholder='customer segment'
+                    <input type="text"
+                    onChange={(event)=> setSearchText(event.target.value)}
+                    value={searchText}
+                    placeholder='customer segment'
                      className='p-1 text-lg font-medium border-b-2 border-black'>
                     </input>
-                    <div className='bg-white'>
-                    <ImCross className='absolute mt-2'/>
+                    <div className='bg-white pt-2 border-b-2 border-black'>
+                        <button type='button' onClick={()=> setSearchText("")}><ImCross /></button>
+                    
                     </div>
             </form>
         </div>
-        <div className='m-2'>
+        <div className='p-6'>
             <div className='border-b-2 border-black'>
                 <span className=' font-bold'>Country of interest</span>
             </div>
@@ -83,13 +53,10 @@ export default function Dashboard() {
             </div>
             <span>Edit the transactions below to match the right information.</span>
         </div>
-
-        <TransactionsTable transactions={transactions} 
+        <TransactionsTable
         toggleEditModal={toggleEditModal}
-        toggleDeleteModal={toggleDeleteModal}
-        
+        toggleDeleteModal={toggleDeleteModal}      
         />
-
     </div>
   )
 }
